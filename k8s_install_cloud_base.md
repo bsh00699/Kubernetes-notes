@@ -1,3 +1,20 @@
+- [基于混合云的集群搭建](#基于混合云的集群搭建)
+  - [环境](#环境)
+    - [云厂商](#云厂商)
+    - [机器（2台）](#机器2台)
+      - [系统](#系统)
+      - [硬件配置（系统盘size看个人需求）](#硬件配置系统盘size看个人需求)
+  - [部署](#部署)
+    - [角色设定](#角色设定)
+    - [主机名设定](#主机名设定)
+    - [系统初始化配置（所有机器都要配置）](#系统初始化配置所有机器都要配置)
+    - [安装Docker（所有机器都要配置）](#安装docker所有机器都要配置)
+    - [配置k8s的yum源地址](#配置k8s的yum源地址)
+    - [安装kubernetes](#安装kubernetes)
+    - [安装flannel网络插件](#安装flannel网络插件)
+    - [检查集群状态](#检查集群状态)
+  - [出现的问题](#出现的问题)
+    - [kubeadm init 失败](#kubeadm-init-失败)
 # 基于混合云的集群搭建
 ## 环境
 ### 云厂商
@@ -95,8 +112,12 @@ EOF
 ```
 systemctl restart docker
 ```
-### 更新yum源
+### 配置k8s的yum源地址
 * 为了以后下载软件包能够快一点，这里使用阿里的yum源
+```
+vim /etc/yum.repos.d/kubernetes.repo
+```
+添加下面的配置内容
 ```
 [kubernetes]
 name=Kubernetes
@@ -121,7 +142,18 @@ kubeadm init \
 --kubernetes-version=v1.20.9 \ 
 --apiserver-advertise-address=[master public ip]
 ```
-初始化成功后显示如下
+若执行命令后此时会卡住，出现下面情况
+```
+Waiting for the kubelet to boot up the control plane as static Pods from directory “/etc/kubernetes/manifests”. This can take up to 4m0s
+Initial timeout of 40s passed
+```
+由于etcd配置文件不正确，所以etcd无法启动，要对该文件进行修改。
+文件路径"/etc/kubernetes/manifests/etcd.yaml"。
+打开文件后要修改以下几个点
+1. 找到 –listen-client-urls 把"–listen-client-urls"后面的公网ip删除
+2. 找到 –listen-peer-urls 把"–listen-peer-urls"改为本地的地址。
+
+稍后master节点初始化就会完成，初始化成功后显示如下
 ```
 Your Kubernetes control-plane has initialized successfully!
 
