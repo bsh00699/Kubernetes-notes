@@ -5,6 +5,7 @@
 ## 基本概念
 * [Pod](https://github.com/bsh00699/Kubernetes-notes/blob/main/pod.md#pod)
 * [Controller](https://github.com/bsh00699/Kubernetes-notes/blob/main/controller.md#controller)
+* [Deployment](https://github.com/bsh00699/Kubernetes-notes/blob/main/deployment.md#deployment)
 * [Service]()
 * [Secret]()
 * [Config]()
