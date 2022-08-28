@@ -7,6 +7,7 @@
 * [Controller](https://github.com/bsh00699/Kubernetes-notes/blob/main/controller.md#controller)
 * [Deployment](https://github.com/bsh00699/Kubernetes-notes/blob/main/deployment.md#deployment)
 * [Service](https://github.com/bsh00699/Kubernetes-notes/blob/main/service.md#service)
+* [StatefulSet](https://github.com/bsh00699/Kubernetes-notes/blob/main/statefulSet.md#statefulSet)
 * [Secret]()
 * [Config]()
 * [Ingress]()

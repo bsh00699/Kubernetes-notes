@@ -4,6 +4,7 @@
     - [Service是什么](#service是什么)
     - [Service存在的意义](#service存在的意义)
     - [pod与service的关系](#pod与service的关系)
+    - [注意](#注意)
   - [Service 常见有三种类型](#service-常见有三种类型)
 
 # Service
@@ -73,6 +74,9 @@ selector:
 labels:
   app: nginx
 ```
+### 注意
+* service 能够提供负载均衡能力，但是在使用上有以下限制
+  * 只提供4层负载均衡能力（IP的形式），但有时我们可能需要更多的匹配规则来转发请求，基于这点4层负载均衡是不支持的，后面可以借助Ingress 方案实现7层代理
 ## Service 常见有三种类型
 
 * ClusterIP：集群内部访问（默认）
