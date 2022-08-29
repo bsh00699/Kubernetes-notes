@@ -176,7 +176,18 @@ Then you can join any number of worker nodes by running the following on each as
 kubeadm join xxx.xxx.xxx.xxx:6443 --token xxxx.wkiew6dgduusu6ie \
     --discovery-token-ca-cert-hash sha256:xxxxx883b33770c50455f1f19306f771dab67b28f9a986fxxxxx
 ```
-* 在从worker节点上执行上面log结果中的 kubeadm join .... 命令,将从节点加入集群
+* 在从worker节点上执行上面log结果中的 kubeadm join .... 命令,将从节点加入集群  
+**注意：由于不在一个内网，集群间通讯默认走内网ip，因此需要借助公网ip，通过iptables转换**  
+master: 
+```
+iptables -t nat -A OUTPUT -d [node1-internal-ip] -j DNAT --to-destination [node1-public-ip]
+iptables -t nat -A OUTPUT -d [node2-internal-ip] -j DNAT --to-destination [node2-public-ip]
+```
+node1:
+```
+iptables -t nat -A OUTPUT -d [node1-internal-ip] -j DNAT --to-destination [node1-public-ip]
+```
+node节点加入master：
 ```
 kubeadm join xxx.xxx.xxx.xxx:6443 --token xxxx.wkiew6dgduusu6ie \
     --discovery-token-ca-cert-hash sha256:xxxxx883b33770c50455f1f19306f771dab67b28f9a986fxxxxx
