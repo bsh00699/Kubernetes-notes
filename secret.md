@@ -1,4 +1,11 @@
-
+- [Secret](#secret)
+  - [介绍](#介绍)
+    - [注意](#注意)
+  - [应用场景](#应用场景)
+  - [使用](#使用)
+    - [创建secret加密数据](#创建secret加密数据)
+    - [以变量的形式挂载到pod容器中](#以变量的形式挂载到pod容器中)
+    - [以volume的形式挂载到pod容器中](#以volume的形式挂载到pod容器中)
 # Secret
 
 ## 介绍
@@ -84,4 +91,44 @@ admin
 root@my-pod:/# echo $SECRET_PASSWORD
 1f2d1e2e67df
 root@my-pod:/# 
+```
+### 以volume的形式挂载到pod容器中
+* 创建secret-vol.yam 文件
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod-secret-volumes
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/foo"
+  volumes:
+  - name: foo
+    secret:
+      secretName: mysecret
+```
+* 拉起pod
+```
+[root@master ~]# vim secret-vol.yaml
+[root@master ~]# kubectl apply -f secret-vol.yaml 
+pod/mypod-secret-volumes created
+[root@master ~]# kubectl get pod
+NAME                     READY   STATUS              RESTARTS   AGE
+ds-test-7wcll            1/1     Running             0          10d
+my-pod                   1/1     Running             0          12h
+mypod-secret-volumes     0/1     ContainerCreating   0          13s
+nginx-6799fc88d8-xpv4q   1/1     Running             0          10d
+[root@master ~]# kubectl exec mypod-secret-volumes  -it bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+root@mypod-secret-volumes:/# cd /etc/fo
+fonts/ foo/   
+root@mypod-secret-volumes:/# cd /etc/foo/
+root@mypod-secret-volumes:/etc/foo# ls     
+password  username
+root@mypod-secret-volumes:/etc/foo# cat username
+adminroot@mypod-secret-volumes:/etc/foo# 
 ```
